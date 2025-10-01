@@ -94,19 +94,13 @@ class RepoIndicator extends PanelMenu.Button {
         GObject.registerClass(this);
     }
 
-    constructor(settings) {
+    constructor(settings, extension) {
         super(0.0, 'Repository Selector');
         this._settings = settings;
+        this._extension = extension;
 
         // Icon in the panel
-        const iconPath = GLib.build_filenamev([
-            this._settings.settings_schema.get_path().replace('/org/gnome/shell/extensions/repocode/', ''),
-            'icons',
-            'repocode-icon.svg'
-        ]);
-
-        const ext = Extension.lookupByURL(import.meta.url);
-        const iconFile = ext.dir.get_child('icons').get_child('repocode-icon.svg');
+        const iconFile = this._extension.dir.get_child('icons').get_child('repocode-icon.svg');
 
         const icon = new St.Icon({
             gicon: new Gio.FileIcon({ file: iconFile }),
@@ -356,7 +350,7 @@ class RepoIndicator extends PanelMenu.Button {
 export default class RepoCodeExtension extends Extension {
     enable() {
         this._settings = this.getSettings();
-        this._indicator = new RepoIndicator(this._settings);
+        this._indicator = new RepoIndicator(this._settings, this);
         Main.panel.addToStatusArea(this.uuid, this._indicator, 0, 'right');
     }
 
