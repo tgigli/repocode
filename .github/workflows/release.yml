@@ -19,9 +19,12 @@ jobs:
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Update metadata version
         run: |
-          jq '.version = ${{ steps.version.outputs.VERSION }}' metadata.json > metadata.tmp
+          jq --arg version "${{ steps.version.outputs.VERSION }}" '.version = ($version | tonumber)' metadata.json > metadata.tmp
           mv metadata.tmp metadata.json
 
       - name: Build extension package
