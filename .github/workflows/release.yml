@@ -38,7 +38,8 @@ jobs:
             stylesheet.css \
             LICENSE \
             README.md \
-            schemas/
+            schemas/ \
+            icons/
 
       - name: Generate release notes
         id: release_notes
