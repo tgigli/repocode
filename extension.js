@@ -99,8 +99,17 @@ class RepoIndicator extends PanelMenu.Button {
         this._settings = settings;
 
         // Icon in the panel
+        const iconPath = GLib.build_filenamev([
+            this._settings.settings_schema.get_path().replace('/org/gnome/shell/extensions/repocode/', ''),
+            'icons',
+            'repocode-icon.svg'
+        ]);
+
+        const ext = Extension.lookupByURL(import.meta.url);
+        const iconFile = ext.dir.get_child('icons').get_child('repocode-icon.svg');
+
         const icon = new St.Icon({
-            icon_name: 'applications-development-symbolic',
+            gicon: new Gio.FileIcon({ file: iconFile }),
             style_class: 'system-status-icon',
         });
         this.add_child(icon);
@@ -201,33 +210,44 @@ class RepoIndicator extends PanelMenu.Button {
                 reposPath = GLib.build_filenamev([GLib.get_home_dir(), 'ghorg', 'openinfer']);
             }
 
-            const [success, stdout] = GLib.spawn_command_line_sync(
-                `find "${reposPath}" -type d -name .git`
+            // Use async subprocess instead of sync spawn
+            const proc = Gio.Subprocess.new(
+                ['find', reposPath, '-type', 'd', '-name', '.git'],
+                Gio.SubprocessFlags.STDOUT_PIPE
             );
 
-            if (!success) return;
+            proc.communicate_utf8_async(null, null, (proc, res) => {
+                try {
+                    const [, stdout] = proc.communicate_utf8_finish(res);
 
-            const output = new TextDecoder().decode(stdout).trim();
-            if (!output) return;
+                    if (!stdout || !stdout.trim()) {
+                        this._updateRepoList();
+                        return;
+                    }
 
-            const gitDirs = output.split('\n');
-            this._allRepos = [];
+                    const gitDirs = stdout.trim().split('\n');
+                    this._allRepos = [];
 
-            gitDirs.forEach(gitDir => {
-                const repoPath = gitDir.replace(/\/\.git$/, '');
-                const repoName = repoPath.replace(reposPath + '/', '');
+                    gitDirs.forEach(gitDir => {
+                        const repoPath = gitDir.replace(/\/\.git$/, '');
+                        const repoName = repoPath.replace(reposPath + '/', '');
 
-                // Skip hidden directories
-                if (repoName.includes('/.')) return;
+                        // Skip hidden directories
+                        if (repoName.includes('/.')) return;
 
-                this._allRepos.push({
-                    name: repoName,
-                    path: repoPath,
-                });
+                        this._allRepos.push({
+                            name: repoName,
+                            path: repoPath,
+                        });
+                    });
+
+                    this._allRepos.sort((a, b) => a.name.localeCompare(b.name));
+                    this._updateRepoList();
+
+                } catch (e) {
+                    logError(e, 'Failed to process repository list');
+                }
             });
-
-            this._allRepos.sort((a, b) => a.name.localeCompare(b.name));
-            this._updateRepoList();
 
         } catch (e) {
             logError(e, 'Failed to load repositories');

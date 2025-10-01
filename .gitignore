@@ -1,0 +1,13 @@
+# Compiled GSettings schemas
+schemas/gschemas.compiled
+
+# Temporary files
+*.tmp
+*~
+
+# Build artifacts
+*.zip
+
+# IDE
+.vscode/
+.idea/
