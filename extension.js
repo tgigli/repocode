@@ -159,13 +159,15 @@ class RepoIndicator extends PanelMenu.Button {
         // Store all repos
         this._allRepos = [];
         this._repoItems = [];
+        this._signalHandlers = [];
 
         // Connect search
-        this._searchEntry.clutter_text.connect('text-changed', () => {
+        const textChangedId = this._searchEntry.clutter_text.connect('text-changed', () => {
             this._filterRepos();
         });
+        this._signalHandlers.push({ object: this._searchEntry.clutter_text, id: textChangedId });
 
-        this._searchEntry.clutter_text.connect('key-press-event', (actor, event) => {
+        const keyPressId = this._searchEntry.clutter_text.connect('key-press-event', (actor, event) => {
             const symbol = event.get_key_symbol();
 
             // Handle Enter key
@@ -186,9 +188,10 @@ class RepoIndicator extends PanelMenu.Button {
 
             return Clutter.EVENT_PROPAGATE;
         });
+        this._signalHandlers.push({ object: this._searchEntry.clutter_text, id: keyPressId });
 
         // Focus search when menu opens
-        this.menu.connect('open-state-changed', (menu, open) => {
+        const menuOpenId = this.menu.connect('open-state-changed', (menu, open) => {
             if (open) {
                 this._searchEntry.set_text('');
                 this._loadRepos();
@@ -199,6 +202,7 @@ class RepoIndicator extends PanelMenu.Button {
                 });
             }
         });
+        this._signalHandlers.push({ object: this.menu, id: menuOpenId });
 
         this._loadRepos();
     }
@@ -329,6 +333,22 @@ class RepoIndicator extends PanelMenu.Button {
     }
 
     destroy() {
+        // Disconnect all signal handlers
+        if (this._signalHandlers) {
+            this._signalHandlers.forEach(handler => {
+                if (handler.object && handler.id) {
+                    handler.object.disconnect(handler.id);
+                }
+            });
+            this._signalHandlers = [];
+        }
+
+        // Destroy repo items
+        if (this._repoItems) {
+            this._repoItems.forEach(item => item.destroy());
+            this._repoItems = [];
+        }
+
         super.destroy();
     }
 }
