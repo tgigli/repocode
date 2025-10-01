@@ -2,6 +2,8 @@
 
 Quick repository selector with fuzzy search for GNOME Shell.
 
+![RepoCode Settings](screenshots/settings.png)
+
 ## Features
 
 - 🔍 **Fuzzy Search** - Find repositories quickly with fzf-style fuzzy matching
