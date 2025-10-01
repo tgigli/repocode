@@ -26,6 +26,40 @@ Access preferences via Extensions app:
 - **Repository Directory** - Path where to search for Git repositories
 - **Open Command** - Command to open repositories (use `{path}` as placeholder)
 
+## Installation
+
+### From Release (Recommended)
+
+1. Download the latest release from [Releases](https://github.com/tgigli/repocode/releases)
+2. Extract the ZIP file:
+   ```bash
+   unzip repocode-v*.zip -d ~/.local/share/gnome-shell/extensions/repocode@gigli.com.br/
+   ```
+3. Restart GNOME Shell:
+   - X11: Press `Alt+F2`, type `r`, press `Enter`
+   - Wayland: Log out and log back in
+4. Enable the extension:
+   ```bash
+   gnome-extensions enable repocode@gigli.com.br
+   ```
+
+### From Source
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/tgigli/repocode.git
+   cd repocode
+   ```
+2. Copy to extensions directory:
+   ```bash
+   cp -r * ~/.local/share/gnome-shell/extensions/repocode@gigli.com.br/
+   ```
+3. Compile schemas:
+   ```bash
+   glib-compile-schemas ~/.local/share/gnome-shell/extensions/repocode@gigli.com.br/schemas/
+   ```
+4. Restart GNOME Shell and enable the extension
+
 ## Requirements
 
 - GNOME Shell 45+

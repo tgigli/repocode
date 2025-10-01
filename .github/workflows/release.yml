@@ -1,0 +1,77 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update metadata version
+        run: |
+          jq '.version = ${{ steps.version.outputs.VERSION }}' metadata.json > metadata.tmp
+          mv metadata.tmp metadata.json
+
+      - name: Build extension package
+        run: |
+          zip -r repocode-v${{ steps.version.outputs.VERSION }}.zip \
+            extension.js \
+            prefs.js \
+            metadata.json \
+            stylesheet.css \
+            LICENSE \
+            README.md \
+            schemas/
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## RepoCode v${{ steps.version.outputs.VERSION }}
+
+          Quick repository selector with fuzzy search for GNOME Shell.
+
+          ### Features
+          - 🔍 Fuzzy search for Git repositories (fzf-style)
+          - 💻 Open repositories in your favorite editor
+          - 📁 Quick access to file manager
+          - 🖥️ Open terminal in repository directory
+          - ⚙️ Configurable repository path and editor command
+
+          ### Installation
+
+          1. Download the `repocode-v${{ steps.version.outputs.VERSION }}.zip` file
+          2. Extract to `~/.local/share/gnome-shell/extensions/repocode@gigli.com.br/`
+          3. Restart GNOME Shell (Alt+F2, type 'r', Enter)
+          4. Enable the extension: `gnome-extensions enable repocode@gigli.com.br`
+
+          ### Requirements
+          - GNOME Shell 45+
+          - Git repositories to manage
+
+          ### What's Changed
+          See [full changelog](https://github.com/tgigli/repocode/commits/v${{ steps.version.outputs.VERSION }})
+          EOF
+          cat release_notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: repocode-v${{ steps.version.outputs.VERSION }}.zip
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
