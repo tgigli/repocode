@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.repocode" path="/org/gnome/shell/extensions/repocode/">
+    <key name="repo-path" type="s">
+      <default>''</default>
+      <summary>Repository Directory</summary>
+      <description>Path where to search for Git repositories</description>
+    </key>
+    <key name="open-command" type="s">
+      <default>'code {path}'</default>
+      <summary>Open Command</summary>
+      <description>Command to open repositories (use {path} as placeholder)</description>
+    </key>
+  </schema>
+</schemalist>

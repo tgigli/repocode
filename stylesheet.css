@@ -1,0 +1,39 @@
+.repo-search-entry {
+    padding: 8px 12px;
+    margin: 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    font-size: 11pt;
+    min-width: 300px;
+}
+
+.repo-search-entry:focus {
+    border-color: rgba(53, 132, 228, 0.8);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.repo-scroll-view {
+    max-height: 400px;
+    min-width: 320px;
+}
+
+.repo-list-box {
+    padding: 4px;
+}
+
+.repo-item-label {
+    font-size: 10pt;
+    padding: 4px 8px;
+}
+
+.repo-action-button {
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+
+.repo-action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
