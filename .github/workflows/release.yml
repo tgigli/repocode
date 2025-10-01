@@ -24,7 +24,9 @@ jobs:
 
       - name: Update metadata version
         run: |
-          jq --arg version "${{ steps.version.outputs.VERSION }}" '.version = ($version | tonumber)' metadata.json > metadata.tmp
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          VERSION_NUM=$(echo $VERSION | cut -d. -f1)
+          jq --argjson version "$VERSION_NUM" '.version = $version' metadata.json > metadata.tmp
           mv metadata.tmp metadata.json
 
       - name: Build extension package
