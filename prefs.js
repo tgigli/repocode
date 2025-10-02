@@ -30,7 +30,7 @@ export default class RepoCodePreferences extends ExtensionPreferences {
 
         const repoPathEntry = new Gtk.Entry({
             text: settings.get_string('repo-path'),
-            placeholder_text: GLib.build_filenamev([GLib.get_home_dir(), 'ghorg', 'openinfer']),
+            placeholder_text: GLib.get_home_dir(),
             valign: Gtk.Align.CENTER,
             hexpand: true,
         });

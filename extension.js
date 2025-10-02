@@ -4,7 +4,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -100,7 +100,7 @@ class RepoIndicator extends PanelMenu.Button {
         this._extension = extension;
 
         // Icon in the panel
-        const iconFile = this._extension.dir.get_child('icons').get_child('repocode-icon.svg');
+        const iconFile = this._extension.dir.get_child('icons').get_child('repocode-ico.png');
 
         const icon = new St.Icon({
             gicon: new Gio.FileIcon({ file: iconFile }),
@@ -122,7 +122,7 @@ class RepoIndicator extends PanelMenu.Button {
         const entryItem = new PopupMenu.PopupBaseMenuItem({
             reactive: false,
             can_focus: false,
-            activate: () => {},
+            activate: () => { },
         });
         entryItem.add_child(this._searchEntry);
         this.menu.addMenuItem(entryItem);
@@ -205,7 +205,7 @@ class RepoIndicator extends PanelMenu.Button {
         try {
             let reposPath = this._settings.get_string('repo-path');
             if (!reposPath) {
-                reposPath = GLib.build_filenamev([GLib.get_home_dir(), 'ghorg', 'openinfer']);
+                reposPath = GLib.get_home_dir();
             }
 
             // Use async subprocess instead of sync spawn
@@ -321,7 +321,7 @@ class RepoIndicator extends PanelMenu.Button {
             item.visible = false;
         });
 
-        scored.forEach(({item}) => {
+        scored.forEach(({ item }) => {
             item.visible = true;
         });
     }

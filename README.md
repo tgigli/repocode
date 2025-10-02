@@ -28,7 +28,11 @@ Access preferences via Extensions app:
 
 ## Installation
 
-### From Release (Recommended)
+### From GNOME Extensions (Recommended)
+
+Install directly from [extensions.gnome.org](https://extensions.gnome.org/extension/8654/repocode/)
+
+### From Release
 
 1. Download the latest release from [Releases](https://github.com/tgigli/repocode/releases)
 2. Extract the ZIP file:
