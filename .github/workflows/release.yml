@@ -41,42 +41,11 @@ jobs:
             schemas/ \
             icons/
 
-      - name: Generate release notes
-        id: release_notes
-        run: |
-          cat > release_notes.md << 'EOF'
-          ## RepoCode v${{ steps.version.outputs.VERSION }}
-
-          Quick repository selector with fuzzy search for GNOME Shell.
-
-          ### Features
-          - 🔍 Fuzzy search for Git repositories (fzf-style)
-          - 💻 Open repositories in your favorite editor
-          - 📁 Quick access to file manager
-          - 🖥️ Open terminal in repository directory
-          - ⚙️ Configurable repository path and editor command
-
-          ### Installation
-
-          1. Download the `repocode-v${{ steps.version.outputs.VERSION }}.zip` file
-          2. Extract to `~/.local/share/gnome-shell/extensions/repocode@gigli.com.br/`
-          3. Restart GNOME Shell (Alt+F2, type 'r', Enter)
-          4. Enable the extension: `gnome-extensions enable repocode@gigli.com.br`
-
-          ### Requirements
-          - GNOME Shell 45+
-          - Git repositories to manage
-
-          ### What's Changed
-          See [full changelog](https://github.com/tgigli/repocode/commits/v${{ steps.version.outputs.VERSION }})
-          EOF
-          cat release_notes.md
-
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: repocode-v${{ steps.version.outputs.VERSION }}.zip
-          body_path: release_notes.md
+          generate_release_notes: true
           draft: false
           prerelease: false
         env:

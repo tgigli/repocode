@@ -269,29 +269,38 @@ class RepoIndicator extends PanelMenu.Button {
 
     _fuzzyMatch(pattern, text) {
         // Fuzzy matching algorithm like fzf
-        pattern = pattern.toLowerCase();
+        pattern = pattern.toLowerCase().replace(/\s+/g, '');  // Remove spaces from pattern
         text = text.toLowerCase();
 
         let patternIdx = 0;
-        let textIdx = 0;
         let score = 0;
         let consecutiveMatches = 0;
+        const matchPositions = [];
 
-        while (patternIdx < pattern.length && textIdx < text.length) {
+        // Try to match each character in pattern
+        for (let textIdx = 0; textIdx < text.length && patternIdx < pattern.length; textIdx++) {
             if (pattern[patternIdx] === text[textIdx]) {
+                // Bonus for consecutive matches
                 score += 1 + consecutiveMatches;
                 consecutiveMatches++;
+                matchPositions.push(textIdx);
                 patternIdx++;
             } else {
                 consecutiveMatches = 0;
             }
-            textIdx++;
         }
 
         // Return null if not all pattern characters matched
         if (patternIdx !== pattern.length) {
             return null;
         }
+
+        // Bonus for matches at word boundaries
+        matchPositions.forEach(pos => {
+            if (pos === 0 || text[pos - 1] === '-' || text[pos - 1] === '_' || text[pos - 1] === '/') {
+                score += 5;
+            }
+        });
 
         return score;
     }
