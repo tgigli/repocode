@@ -1,6 +1,6 @@
 {
   "name": "RepoCode",
-  "description": "Quick repository selector with fuzzy search to open in your favorite editor. This extension accesses the clipboard to copy repository paths.",
+  "description": "Quick repository selector with fuzzy search. Open in editor, copy path to clipboard, launch terminal, or open folder. Clipboard access is used for copying repository paths.",
   "uuid": "repocode@gigli.com.br",
   "shell-version": [
     "45",
