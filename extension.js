@@ -72,6 +72,29 @@ class RepoItem extends PopupMenu.PopupBaseMenuItem {
         });
 
         this.add_child(terminalButton);
+
+        // Add copy path icon button
+        const copyIcon = new St.Icon({
+            icon_name: 'edit-copy-symbolic',
+            style_class: 'popup-menu-icon',
+            icon_size: 16,
+        });
+
+        const copyButton = new St.Button({
+            child: copyIcon,
+            style_class: 'repo-action-button',
+            x_align: Clutter.ActorAlign.END,
+        });
+
+        copyButton.connect('clicked', () => {
+            const clipboard = St.Clipboard.get_default();
+            clipboard.set_text(St.ClipboardType.CLIPBOARD, this._fullPath);
+            if (this._menuToClose) {
+                this._menuToClose.close();
+            }
+        });
+
+        this.add_child(copyButton);
     }
 
     activate(event) {
